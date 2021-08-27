@@ -10,7 +10,7 @@ ADDFILE =  src/test/test.cpp
 LDFLAGS = 
 
 # Makefile settings - Can be customized.
-APPNAME = app
+APPNAME = remoteServer
 EXT = .cpp
 SRCDIR = src
 OBJDIR = obj
