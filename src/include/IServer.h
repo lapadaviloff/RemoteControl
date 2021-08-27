@@ -1,6 +1,11 @@
+#pragma once
 #include <iostream>
+/*общий интерфейс сервера*/
 class IServer {
   public:
-    virtual void sendMessageToChat () = 0;
+    ~IServer(){};
+    /*выдача сообщения, полученного сервероа с сокета */
     virtual std::string getMessage () = 0;
+    
+  
 };
