@@ -6,7 +6,7 @@ class IObserver {
  public:
   virtual ~IObserver(){};
   /*действие при появлении сообщения */
-  virtual void Update(const Message &messageFromChat) = 0;
+  virtual void update(const Message &messageFromChat) = 0;
   /*отправка сообщения в общий чат*/
   virtual void sendMessageToChat () = 0;
   /*присоеденится к чату*/

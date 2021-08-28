@@ -5,9 +5,9 @@ class IChat {
  public:
   virtual ~IChat(){};
   /*добавить класс в чат*/
-  virtual void Attach(IObserver *observer) = 0;
+  virtual void attach(IObserver *observer) = 0;
   /*удалмть класс из чата*/
-  virtual void Detach(IObserver *observer) = 0;
+  virtual void detach(IObserver *observer) = 0;
   /*рассылка сообщений*/
-  virtual void Notify() = 0;
+  virtual void notify() = 0;
 };
