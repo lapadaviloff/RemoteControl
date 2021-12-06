@@ -1,15 +1,16 @@
 #pragma once
 #include <iostream>
-#include "include/IObserver.h"
-#include"include/Chat.h"
+#include "include/iobserver.h"
+#include "include/chat.h"
 /*общий интерфейс сервера*/
 class ServerWithChat:public IObserver, Chat {
-     private:
-     std::string m_message;
-     std::string m_messageFromChat;
-     Chat &m_chat;
-     static int m_staticMumber;
-     int m_number;
+     
+    private:
+    std::string m_message;
+    std::string m_messageFromChat;
+    Chat &m_chat;
+    static int m_staticMumber;
+    int m_number;
  
 
   public:

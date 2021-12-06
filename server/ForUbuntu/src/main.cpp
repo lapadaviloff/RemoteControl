@@ -8,6 +8,7 @@
 #include <iostream>
 #include "include/test.h"
 int main (int arg, char ** argv){
-test();
+test ();
+
 return 0;
 }
