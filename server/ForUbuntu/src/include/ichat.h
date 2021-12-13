@@ -1,5 +1,5 @@
 #pragma once
-#include "include/iobserver.h"
+#include "iobserver.h"
 /*интерфейс чата для обмена при возникновении сообщения в классе*/
 class IChat {
  

@@ -1,5 +1,5 @@
 #pragma once
-#include "include/iobserver.h"
+#include "iobserver.h"
 /*эмулятор клавиатуры*/
 class KeynoardEmularor : public IObserver {
 

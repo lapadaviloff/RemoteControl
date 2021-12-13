@@ -1,6 +1,6 @@
 #pragma once
 #include <list>
-#include "include/ichat.h"
+#include "ichat.h"
 /*чат для обмена при возникновении сообщения в классе*/
 class Chat:public IChat{
     
@@ -9,7 +9,7 @@ class Chat:public IChat{
     std::string m_messageToChat;
 
     public: 
-
+    ~Chat();
     /*добавить класс в чат*/
     void attach(IObserver *observer) override;
     /*удалмть класс из чата*/
