@@ -14,10 +14,17 @@
 int Observer::m_staticNumber = 0;
 
 int main (int arg, char ** argv){
-test ();
-Chat *chat = new Chat; 
-SocetServer *server = new SocetServer(*chat);
-//server->connect();
 
+test ();
+
+Chat *chat = new Chat; 
+try{
+SocetServer *server = new SocetServer(*chat);
+server->connect();
+}
+catch (const char* err ){
+    std::cout << "\n=> "<< err << std::endl;
+}
+std::cout << "\n=> main" << std::endl;
 return 0;
 }

@@ -3,36 +3,31 @@
 
 SocetServer::SocetServer(Chat &chat):Observer(chat), m_portNum (1500),\
 m_isExit(false),m_bufSize(1024) 
-{
+{ 
     try{
-    m_buffer = new char[m_bufSize];
-    }
-   catch(std::out_of_range const&)
-    {    std ::cout <<  "Allocation failure " << std::endl;
-          abort();
-    }
-}
-
-SocetServer::~SocetServer () {
-
-delete[] m_buffer;
-
-}
-
-void SocetServer::connect(){
-  
     
+    m_buffer = new char[m_bufSize];
+    
+    }
+    catch(std::bad_alloc const &){
+
+         throw "Allocation m_buffer failure";  
+    }
 
     /* ---------- ESTABLISHING SOCKET CONNECTION ----------*/
     /* --------------- socket() function ------------------*/
 
     m_client = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (m_client < 0) 
-    {
-        std::cout << "\nError establishing socket..." << std::endl;
-        exit(1);
+    try{
+
+    if (m_client < 0) throw "Error establishing socket...";  
+    
     }
+      catch(const char* err){
+
+         throw err; 
+       }
 
     /*
         The socket() function creates a new socket.
@@ -47,7 +42,7 @@ void SocetServer::connect(){
             it returns -1.
     */
 
-    std::cout << "\n=> Socket server has been created..." << std::endl;
+     std::cout << "\n=> Socket server has been created..."  << std::endl;
 
     /* 
         The variable serv_addr is a structure of sockaddr_in. 
@@ -66,15 +61,19 @@ void SocetServer::connect(){
 
     /* ---------- BINDING THE SOCKET ---------- */
     /* ---------------- bind() ---------------- */
+    try {
 
-
-    if ((bind(m_client, (struct sockaddr*)&m_server_addr,sizeof(m_server_addr))) \
-    < 0) 
+    if ((bind(m_client, (struct sockaddr*)&m_server_addr, sizeof(m_server_addr)))\
+     < 0) 
     {
-        std::cout << "=> Error binding connection, the socket has already \
-been established..." << std::endl;
-        
+       throw "Error binding connection, the socket has already been established..."; 
     }
+    }
+
+    catch(const char* err){
+
+         throw err; 
+       }
 
     /* 
         The bind() system call binds a socket to an address, 
@@ -121,18 +120,33 @@ been established..." << std::endl;
         of this structure.
     */
 
-    int clientCount = 1;
-    m_server = accept(m_client,(struct sockaddr *)&m_server_addr,&m_size);
+   // 
+    m_server = accept(m_client,(struct sockaddr *)(&m_server_addr),&m_size);
 
+       std::cout << "=> Connected client "  << std::endl;
     // first check if it is valid or not
     if (m_server < 0) 
         std::cout << "=> Error on accepting..." << std::endl;
+}
 
-    while (m_server > 0) 
-    {
+SocetServer::~SocetServer () {
+
+delete[] m_buffer;
+
+}
+
+void SocetServer::connect(){
+ 
+   
+
+   // while (m_server > 0) 
+    //{  
+
+        std::cout <<"=> Connection with IP: " << inet_ntoa(m_server_addr.sin_addr)\
+        <<std::endl;
         strcpy(m_buffer, "=> Server connected...\n");
         send(m_server, m_buffer, m_bufSize, 0);
-        std::cout << "=> Connected with the client #" << clientCount \
+        std::cout << "=> Connected with the client #" \
         << ", you are good to go..." << std::endl;
         std::cout << "\n=> Enter # to end the connection\n" << std::endl;
 
@@ -204,6 +218,6 @@ been established..." << std::endl;
         std::cout << "\nGoodbye..." << std::endl;
         m_isExit = false;
         exit(1);
-    }
+    //}
     close(m_client);
     }

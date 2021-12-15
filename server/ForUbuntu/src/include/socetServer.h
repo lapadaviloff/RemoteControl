@@ -60,5 +60,6 @@ class SocetServer : public Observer {
     SocetServer(Chat &chat);
     ~SocetServer();
     void connect ();
+    void disconnect ();
 
 };

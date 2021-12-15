@@ -6,7 +6,6 @@
     std::cout << "Hi, I'm the Observer \"" << ++Observer::m_staticNumber \
     << "\".\n";
     this->m_number = Observer::m_staticNumber;
-
     }
 
 
