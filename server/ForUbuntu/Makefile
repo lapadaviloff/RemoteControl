@@ -6,7 +6,7 @@
 # **/*.cpp
 CC = g++
 CXXFLAGS = -std=c++14 -Wall -Wextra -g 
-ADDFILE =  src/test/test.cpp
+ADDFILE =  #src/test/test.cpp 
 LDFLAGS = 
 
 # Makefile settings - Can be customized.
@@ -36,7 +36,7 @@ all: $(APPNAME)
 
 # Builds the app
 $(APPNAME): $(OBJ)
-	$(CC) $(CXXFLAGS) $(ADDFILE) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CXXFLAGS)  $(ADDFILE) -o $@ $^ $(LDFLAGS)
 
 # Creates the dependecy rules
 #%.d: $(SRCDIR)/%$(EXT)
@@ -47,7 +47,7 @@ $(APPNAME): $(OBJ)
 
 # Building rule for .o files and its .c/.cpp in combination with all .h
 $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
-	$(CC) $(CXXFLAGS) -o $@ -c $<
+	$(CC) $(CXXFLAGS)   -o $@ -c $<
 
 ################### Cleaning rules for Unix-based OS ###################
 # Cleans complete project

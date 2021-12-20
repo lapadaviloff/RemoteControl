@@ -1,18 +1,36 @@
 #include "include/socetServer.h"
 
 
-SocetServer::SocetServer(Chat &chat):Observer(chat), m_portNum (1500),\
-m_isExit(false),m_bufSize(1024) 
+SocetServer::SocetServer(Chat &chat, std::string ip):
+    Observer(chat), 
+    m_portNum (1500),
+    m_isExit(false),
+    m_bufSize(1024),
+    m_ip(ip)
+
 { 
+     std::cout << "= ip : " << ip << std::endl; 
     try{
     
     m_buffer = new char[m_bufSize];
     
     }
-    catch(std::bad_alloc const &){
+    catch(std::bad_alloc const &err){
 
          throw "Allocation m_buffer failure";  
     }
+
+
+}
+
+SocetServer::~SocetServer () {
+
+    delete[] m_buffer;
+    close(m_server);
+    close(m_client);
+
+}
+void SocetServer::init() {
 
     /* ---------- ESTABLISHING SOCKET CONNECTION ----------*/
     /* --------------- socket() function ------------------*/
@@ -56,9 +74,13 @@ m_isExit(false),m_bufSize(1024)
     */
 
     m_server_addr.sin_family = AF_INET;
-    m_server_addr.sin_addr.s_addr = htons(INADDR_ANY);
-    m_server_addr.sin_port = htons(m_portNum);
-
+   m_server_addr.sin_port = htons(m_portNum);
+   if (m_ip == "")m_server_addr.sin_addr.s_addr = htons(INADDR_ANY);
+   else 
+   {
+      std::cout << m_ip.c_str() << std::endl; 
+   m_server_addr.sin_addr.s_addr =inet_addr (m_ip.c_str());
+   }
     /* ---------- BINDING THE SOCKET ---------- */
     /* ---------------- bind() ---------------- */
     try {
@@ -127,13 +149,9 @@ m_isExit(false),m_bufSize(1024)
     // first check if it is valid or not
     if (m_server < 0) 
         std::cout << "=> Error on accepting..." << std::endl;
-}
-
-SocetServer::~SocetServer () {
-
-delete[] m_buffer;
 
 }
+
 
 void SocetServer::connect(){
  
@@ -143,7 +161,7 @@ void SocetServer::connect(){
     //{  
 
         std::cout <<"=> Connection with IP: " << inet_ntoa(m_server_addr.sin_addr)\
-        <<std::endl;
+        <<"  "<<m_server<<std::endl;
         strcpy(m_buffer, "=> Server connected...\n");
         send(m_server, m_buffer, m_bufSize, 0);
         std::cout << "=> Connected with the client #" \
@@ -214,10 +232,10 @@ void SocetServer::connect(){
         // inet_ntoa converts packet data to IP, which was taken from client
         std::cout << "\n\n=> Connection terminated with IP " << inet_ntoa\
         (m_server_addr.sin_addr);
-        close(m_server);
+       
         std::cout << "\nGoodbye..." << std::endl;
-        m_isExit = false;
-        exit(1);
+       // m_isExit = false;
+       
     //}
-    close(m_client);
+ 
     }

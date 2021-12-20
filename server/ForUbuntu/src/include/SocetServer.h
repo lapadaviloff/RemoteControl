@@ -23,6 +23,7 @@ class SocetServer : public Observer {
     bool m_isExit;
     int m_bufSize;
     char *m_buffer; 
+    std::string m_ip;
 
     /* ---------- INITIALIZING VARIABLES ---------- */
 
@@ -57,9 +58,10 @@ class SocetServer : public Observer {
   
 
     public:
-    SocetServer(Chat &chat);
+    SocetServer(Chat &chat, std::string ip = "");
     ~SocetServer();
+    void init ();
     void connect ();
-    void disconnect ();
+    
 
 };

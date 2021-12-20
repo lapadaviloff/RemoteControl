@@ -3,4 +3,4 @@
 /*эмулятор клавиатуры*/
 class KeynoardEmularor : public IObserver {
 
-}
+};
