@@ -116,3 +116,6 @@ void SocetServer::send_recerv (){
         /* ----------------- close() --------------- */
  close(m_server);
 }
+void SocetServer::update(const Message &messageFromChat) {
+
+}

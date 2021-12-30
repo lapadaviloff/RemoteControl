@@ -47,6 +47,7 @@ class SocetServer : public Observer {
     void connect ();
     /*отправка и прием сообщений*/
     void send_recerv ();
-    
+    /*действие при появлении сообщения */
+    void update(const Message &messageFromChat) override;
 
 };

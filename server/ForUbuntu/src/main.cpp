@@ -12,6 +12,7 @@
 #include "include/observer.h"
 #include "include/getMyIP.h"
 #include "include/isIP.h"
+#include "include/testObserver.h"
 
 
 
@@ -20,7 +21,7 @@ int Observer::m_staticNumber = 0;
 
 int main (int argc, char * argv[]){
 std::string ip ="";
-
+/*
  for (int i = 1; i < argc; i++){  
   
     if (strcmp(argv[i], "-local") == 0){       
@@ -44,10 +45,19 @@ std::string ip ="";
         }
     }
 }
-
-test ();
-std::cout <<"=> my IP : " <<  getMyIP() << std::endl; 
+*/
+//test ();
+//std::cout <<"=> my IP : " <<  getMyIP() << std::endl; 
 Chat *chat = new Chat; 
+TestObserver * observ1 = new TestObserver(*chat); 
+ 
+
+//observ1->createMessage("observ1");
+//observ2->createMessage("observ2");
+
+
+
+
 int buffer = 1024;
 char * fromClient = new char [buffer];
 char * toClient = new char [buffer];
@@ -63,6 +73,7 @@ try{
     server->connect();
     server->send_recerv();
     } while(1);
+delete server;
    
 }
 catch (const char* err ){
