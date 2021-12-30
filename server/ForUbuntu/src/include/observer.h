@@ -12,7 +12,7 @@ class Observer:public IObserver {
     static int m_staticNumber;
     int m_number;
  
-  public:
+  protected:
    Message m_messageToChat;
    Chat &m_chat;
 
@@ -25,7 +25,7 @@ class Observer:public IObserver {
      /*действие при появлении сообщения */
     virtual void update(const Message &messageFromChat) = 0;
     /*отправка сообщения в общий чат*/
-    void sendMessageToChat (Message &message);
+    void sendMessageToChat (const std::string &to, const std::string &message);
     /*отсоеденится от чата*/
     void removeFromChat ();
 };

@@ -105,7 +105,9 @@ void SocetServer::send_recerv (){
            break;
         }
         strcpy(m_fromClient, m_buffer);
-        std::cout << m_fromClient << std::endl;
+        
+        //std::cout << m_fromClient << std::endl;
+        sendMessageToChat("keyboardEmulation",m_buffer);
         strcpy(m_buffer, m_toClient);
         
         send(m_server, m_buffer, m_bufSize, 0);
@@ -117,5 +119,6 @@ void SocetServer::send_recerv (){
  close(m_server);
 }
 void SocetServer::update(const Message &messageFromChat) {
+  if(messageFromChat.m_to =="server")std::cout << "server accepted" << std::endl; 
 
 }

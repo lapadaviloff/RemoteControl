@@ -27,8 +27,11 @@ std::cout << "Goodbye, I was the Observer \"" << this->m_number << "\".\n";
 
 
     /*отправка сообщения в общий чат*/
-    void Observer::sendMessageToChat (Message &message){
-       m_chat.createMessage(message);
+    void Observer::sendMessageToChat (const std::string &to, const std::string &message){
+       Message m;
+       m.m_to = to;
+       m.m_message = message;
+       m_chat.createMessage(m);
 
     }
 
