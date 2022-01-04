@@ -22,6 +22,6 @@ class Chat:public IChat{
     void detach(IObserver *observer) override;
     /*рассылка сообщений*/
     void notify() override;
-    
+     /*создание сообщения в чат */
     void createMessage(Message message);
 };

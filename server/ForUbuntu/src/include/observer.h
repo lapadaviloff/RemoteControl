@@ -25,6 +25,7 @@ class Observer:public IObserver {
      /*действие при появлении сообщения */
     virtual void update(const Message &messageFromChat) = 0;
     /*отправка сообщения в общий чат*/
+    public:
     void sendMessageToChat (const std::string &to, const std::string &message);
     /*отсоеденится от чата*/
     void removeFromChat ();

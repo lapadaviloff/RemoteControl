@@ -3,16 +3,11 @@
 
 SocetServer::SocetServer(
   Chat &chat, 
-  char * fromClient,
-  char * toClient,
   int bufSize):
 
   Observer(chat), 
   m_portNum (1500),
-  m_bufSize(bufSize),
-  m_fromClient(fromClient),
-  m_toClient(toClient)
-
+  m_bufSize(bufSize)
 
 { 
     try{
@@ -34,6 +29,7 @@ SocetServer::~SocetServer () {
     close(m_sockfd);
 
 }
+/*инициализация сервера*/
 void SocetServer::init() {
 
     /* ---------- ESTABLISHING SOCKET CONNECTION ----------*/
@@ -73,6 +69,7 @@ void SocetServer::init() {
          throw err; 
        }
 }
+     /*соединение с клиентом */
     void SocetServer::connect(){
 
     std::cout << "=> Looking for clients..." << std::endl;
@@ -94,7 +91,7 @@ void SocetServer::init() {
 
 }
 
-
+  /*отправка и прием сообщений*/
 void SocetServer::send_recerv (){
        
        do{
@@ -104,21 +101,20 @@ void SocetServer::send_recerv (){
            close(m_server);
            break;
         }
-        strcpy(m_fromClient, m_buffer);
-        
-        //std::cout << m_fromClient << std::endl;
+       /*получаем сообщение от клиента и отправляем в чат*/
         sendMessageToChat("keyboardEmulation",m_buffer);
-        strcpy(m_buffer, m_toClient);
-        
-        send(m_server, m_buffer, m_bufSize, 0);
 
-       } while (m_fromClient[0] != '#');
+       } while (*m_buffer != '#'); // закрытие действующего соединения с клиентом
         std::cout << "=> connect closed " << std::endl;
         /* ---------------- CLOSE CALL ------------- */
         /* ----------------- close() --------------- */
  close(m_server);
 }
 void SocetServer::update(const Message &messageFromChat) {
-  if(messageFromChat.m_to =="server")std::cout << "server accepted" << std::endl; 
+  /*если пришло сообщение клиенту, отправляем сообщение */
+  if(messageFromChat.m_to =="client"){
 
+  send(m_server, messageFromChat.m_message.c_str(), m_bufSize, 0);
+  
+  }
 }

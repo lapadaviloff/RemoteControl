@@ -12,19 +12,9 @@
 
 
     Observer::~Observer(){
-std::cout << "Goodbye, I was the Observer \"" << this->m_number << "\".\n";
+    std::cout << "Goodbye, I was the Observer \"" << this->m_number << "\".\n";
 
     }
-
-   
-     /*действие при появлении сообщения */
-   /*
-    void Observer::update(const Message &messageFromChat) {
-
-
-    }
-    */
-
 
     /*отправка сообщения в общий чат*/
     void Observer::sendMessageToChat (const std::string &to, const std::string &message){

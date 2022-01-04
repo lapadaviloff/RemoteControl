@@ -28,7 +28,7 @@ m_listObserver.remove(observer);
     }
 
     }
-
+  /*создание сообщения в чат */
  void Chat::createMessage(Message message){
  this->m_messageToChat = message;
     notify();

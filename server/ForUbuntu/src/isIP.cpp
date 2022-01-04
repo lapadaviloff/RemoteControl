@@ -1,6 +1,6 @@
 #include "include/isIP.h"
 
-
+/*проверка на принадлежность к IP адресам */
 bool isIP (std::string s){
 
 
@@ -15,7 +15,7 @@ return true;
 
 }
 
-
+/*проверка на принадлежность к числу*/
 bool is_number(const std::string& s)
 {
     std::string::const_iterator it = s.begin();

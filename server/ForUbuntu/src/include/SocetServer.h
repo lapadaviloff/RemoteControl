@@ -26,28 +26,22 @@ class SocetServer : public Observer {
     sockaddr_in m_server_addr;
     socklen_t m_size;
     
-    char *m_fromClient;  //сообщение от клиента
-    char *m_toClient;    //сообщение для клиента.эти два сообщения для 
-                         //внешней связи в thead 
-    
     /*инициализация сервера*/
     void init ();
 
-    public:
+protected:
+   
     
+    /*действие при появлении сообщения */
+    void update(const Message &messageFromChat) override;
+
+public:
     SocetServer(
         Chat &chat, 
-        char * fromClient,
-        char * toClient,
         int bufSize);
-    
     ~SocetServer();
-   
     /*соединение с клиентом*/
     void connect ();
     /*отправка и прием сообщений*/
     void send_recerv ();
-    /*действие при появлении сообщения */
-    void update(const Message &messageFromChat) override;
-
 };

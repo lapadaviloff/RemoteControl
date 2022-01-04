@@ -5,7 +5,7 @@
 # Compiler settings - Can be customized.
 # **/*.cpp
 CC = g++
-CXXFLAGS = -std=c++14 -Wall -Wextra -g 
+CXXFLAGS = -std=c++14 -Wall -Wextra -g -pthread
 ADDFILE =  #src/test/test.cpp 
 LDFLAGS = 
 

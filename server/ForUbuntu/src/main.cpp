@@ -13,7 +13,8 @@
 #include "include/getMyIP.h"
 #include "include/isIP.h"
 #include "include/testObserver.h"
-
+#include <chrono>
+#include <thread>
 
 
 int Observer::m_staticNumber = 0;
@@ -46,44 +47,47 @@ std::string ip ="";
     }
 }
 */
-//test ();
+test ();
 //std::cout <<"=> my IP : " <<  getMyIP() << std::endl; 
 Chat *chat = new Chat; 
 TestObserver * observ1 = new TestObserver(*chat); 
- 
 
-//observ1->createMessage("observ1");
-//observ2->createMessage("observ2");
+bool needConnect = true;  //необходимость соединения с клиентом
+bool firstConnect = true; //первый запуск программы
+int buffer = 1024;        //размер буфера сообщения клиент-сервер
 
-
-
-
-int buffer = 1024;
-char * fromClient = new char [buffer];
-char * toClient = new char [buffer];
-strcpy(toClient," massage from server");
 try{
     SocetServer *server = new SocetServer (
     *chat,
-    fromClient,
-    toClient,
-    buffer);    
+    buffer); 
+    std::thread t;
     
     do{
-    server->connect();
-    server->send_recerv();
-    } while(1);
+        if (needConnect){     //если нужно соединение с клиентом
+          if (firstConnect)firstConnect = false;
+          else t.join();        //соединить поток если не в первый раз
+         needConnect = false;
+         server->connect();
+         t = std::thread ([&](){ //передача обмена с клиентом в поток
+             server->send_recerv();
+             needConnect = true;
+         });
+        
+        }
+    /*получение сообщений от других источников для клиента*/    
+    observ1->sendMessageToChat("client","hello)");
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    
+    } while(1); // определить условие выхода!!!
+t.join();
 delete server;
-   
 }
 catch (const char* err ){
     std::cout << "\n=> "<< err << std::endl;
   
 }
-delete chat;
-delete [] fromClient;
-delete [] toClient;
 
+delete chat;
 std::cout << "\n=> main" << std::endl;
 
 return 0;
