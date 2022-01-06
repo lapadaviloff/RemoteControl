@@ -2,31 +2,34 @@
 #include <iostream>
 #include "iobserver.h"
 #include "chat.h"
-/**/
+
+/*слушатель чата*/
 class Observer:public IObserver {
      
-    private:
-    //std::string m_message;
-    //std::string m_messageFromChat;
-   
+private:
+
     static int m_staticNumber;
     int m_number;
  
-  protected:
-   Message m_messageToChat;
-   Chat &m_chat;
+protected:
 
-    /*выдача сообщения, полученного сервером с сети */
-    std::string getMessage () ;
+   Message m_messageToChat; //сообщение для чата
+   Chat &m_chat;
 
     Observer(Chat &chat);
     ~Observer();
 
-     /*действие при появлении сообщения */
+    /*выдача сообщения, полученного сервером с сети */
+    std::string getMessage () ;
+    
+    /*действие при появлении сообщения */
     virtual void update(const Message &messageFromChat) = 0;
+    
+public:
+
     /*отправка сообщения в общий чат*/
-    public:
-    void sendMessageToChat (const std::string &to, const std::string &message);
+    void sendMessageToChat (const Message &message);
+    
     /*отсоеденится от чата*/
     void removeFromChat ();
 };

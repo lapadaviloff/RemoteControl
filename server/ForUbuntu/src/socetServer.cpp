@@ -4,33 +4,35 @@
 SocetServer::SocetServer(
   Chat &chat, 
   int bufSize):
-
   Observer(chat), 
   m_portNum (1500),
-  m_bufSize(bufSize)
-
-{ 
+  m_bufSize(bufSize){ 
     try{
-    
+    m_temp = new char[m_bufSize];
     m_buffer = new char[m_bufSize];
+
+    
     
     }
     catch(std::bad_alloc const &err){
 
-         throw "Allocation m_buffer failure";  
+         throw "server:Allocation m_buffer failure";  
     }
 
     init ();
 }
 
-SocetServer::~SocetServer () {
+SocetServer::~SocetServer (){
 
     delete[] m_buffer;
+    delete[] m_temp;
+    close(m_server);
     close(m_sockfd);
+    
 
 }
 /*инициализация сервера*/
-void SocetServer::init() {
+void SocetServer::init(){
 
     /* ---------- ESTABLISHING SOCKET CONNECTION ----------*/
     /* --------------- socket() function ------------------*/
@@ -39,16 +41,15 @@ void SocetServer::init() {
 
     try{
 
-    if (m_sockfd < 0) throw "Error establishing socket...";  
+    if (m_sockfd < 0) throw "server:Error establishing socket...";  
     
     }
-      catch(const char* err){
+      catch(char const *err){
 
          throw err; 
-       }
+      }
 
-     std::cout << "\n=> Socket server has been created..."  << std::endl;
-
+    std::cout << "=> server:Socket server has been created..."  << std::endl;
     m_server_addr.sin_family = AF_INET;
     m_server_addr.sin_port = htons(m_portNum);
     m_server_addr.sin_addr.s_addr = htons(INADDR_ANY);
@@ -57,22 +58,22 @@ void SocetServer::init() {
     /* ---------------- bind() ---------------- */
     try {
 
-    if ((bind( m_sockfd, (struct sockaddr*)&m_server_addr, sizeof(m_server_addr)))\
-     < 0) 
-    {
-       throw "Error binding connection, the socket has already been established..."; 
-    }
+      if ((bind( m_sockfd, (struct sockaddr*)&m_server_addr, sizeof(m_server_addr)))\
+      < 0){
+         
+       throw "server:Error binding connection, the socket has already been established..."; 
+      }
     }
 
-    catch(const char* err){
-
+    catch(char const *err){
          throw err; 
-       }
+    }
 }
-     /*соединение с клиентом */
-    void SocetServer::connect(){
 
-    std::cout << "=> Looking for clients..." << std::endl;
+/*соединение с клиентом */
+void SocetServer::connect(){
+
+    std::cout << "=> server:Looking for clients..." << std::endl;
 
     /* ------------- LISTENING CALL ------------- */
     /* ---------------- listen() ---------------- */
@@ -84,37 +85,56 @@ void SocetServer::init() {
 
     m_server = accept(m_sockfd,(struct sockaddr *)(&m_server_addr),&m_size);
 
-       std::cout << "=> Connected client "  << std::endl;
+    std::cout << "=> server:Connected client "  << std::endl;
     // first check if it is valid or not
-    if (m_server < 0) 
-        std::cout << "=> Error on accepting..." << std::endl;
-
+    
+    if (m_server < 0)std::cout << "=> server:Error on accepting..." << std::endl;
+  
 }
 
   /*отправка и прием сообщений*/
-void SocetServer::send_recerv (){
+    bool SocetServer::recerv (){
+    do{
        
-       do{
-       
-        if(recv(m_server, m_buffer, m_bufSize, 0)==0){
-           std::cout << "=> lost connect" << std::endl;
-           close(m_server);
-           break;
-        }
-       /*получаем сообщение от клиента и отправляем в чат*/
-        sendMessageToChat("keyboardEmulation",m_buffer);
-
-       } while (*m_buffer != '#'); // закрытие действующего соединения с клиентом
-        std::cout << "=> connect closed " << std::endl;
-        /* ---------------- CLOSE CALL ------------- */
-        /* ----------------- close() --------------- */
- close(m_server);
+      if(recv(m_server, m_buffer, m_bufSize, 0)==0){
+        std::cout << "=> server:Lost connect" << std::endl;
+        close(m_server);
+        
+        return false;
+      }
+    
+      /*получаем сообщение от клиента и отправляем в чат*/
+      sendMessageToChat(parseMessage(m_buffer));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    strcpy(m_temp,m_buffer);
+    strcpy(m_buffer, "NULL");
+    if(send(m_server,m_buffer,m_bufSize, 0) == -1) recv(m_server, m_buffer, m_bufSize, 0);
+    } while (*m_temp != '#'); // остановка приема
+    std::cout << "=> server:Connect closed " << std::endl;
+    return true;
 }
 void SocetServer::update(const Message &messageFromChat) {
+  
   /*если пришло сообщение клиенту, отправляем сообщение */
   if(messageFromChat.m_to =="client"){
-
-  send(m_server, messageFromChat.m_message.c_str(), m_bufSize, 0);
-  
+    std::string s;
+    s = messageFromChat.m_to + ":" + messageFromChat.m_message;
+    if(send(m_server,s.c_str(),m_bufSize, 0) == -1) recv(m_server, m_buffer, m_bufSize, 0) ;
   }
+}
+
+/*преобразование из char* в Message*/
+Message SocetServer::parseMessage(std::string s){
+Message m;
+
+/*если отсутствует спец символ */
+if (s.find(':') == std::string::npos){
+    m.m_to = "NULL";
+    m.m_message = "message error";
+    return m;
+}
+
+m.m_to = s.substr(0,s.find(':')); 
+m.m_message = s.erase(0, s.find(':')+1);
+return m;
 }
