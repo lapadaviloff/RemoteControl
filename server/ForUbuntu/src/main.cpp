@@ -32,19 +32,19 @@ if(std::system("xdotool key space") == 32512){
 std::cout <<"=> my IP : " <<  getMyIP() << std::endl; 
 
 try{
-Chat *chat = new Chat; 
+Chat *chat = new Chat;
 KeynoardEmularor * keyboardEmulator = new KeynoardEmularor(*chat);
 bool needConnect = true;  //необходимость соединения с клиентом
 bool firstConnect = true; //первый запуск программы
 int buffer = 1024;        //размер буфера сообщения клиент-сервер
-bool isExit = false;      //флаг завершения программы
-
+bool isExit = true;      //флаг завершения программы
 
     SocetServer *server = new SocetServer (
     *chat,
     buffer); 
 
     std::thread t;
+     
     
     do{
         if (needConnect){     //если нужно соединение с клиентом
@@ -53,21 +53,22 @@ bool isExit = false;      //флаг завершения программы
           else t.join();        //соединить поток если не в первый раз
                                 //для гарантированного завершения
          
-         needConnect = false;
-         server->connect();
+             needConnect = false;
+         
 
          t = std::thread ([&](){ //передача обмена с клиентом в поток
+             server->connect();
              isExit = server->recerv();
              needConnect = true;
+             
+             
          });
         
         }
    
     /*получение сообщений от других источников для клиента*/    
-   
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    
-    } while(!isExit); 
+    } while(isExit); 
 
 t.join();
 delete server;
@@ -79,6 +80,6 @@ catch (char const *err ){
     std::cout << "\n=> " << err << std::endl;
   
 }
-
+std::cout << "main " << std::endl;
 return 0;
 }

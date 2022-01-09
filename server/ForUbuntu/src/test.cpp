@@ -35,20 +35,22 @@ void test (){
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     check (observ1->test , "testObserver:normal message");
-    observ1->sendMessageToChat(m);
-
+    //observ1->sendMessageToChat(m);
+    
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    /*
     check (client->recerv() , "testClient");
     
     
     client->sendFromClient("#");
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     check (observ1->test , "testObserver:NULL message");
+    */
     t.join(); 
     delete chat;
     delete observ1;
-    delete server;
     delete client;
+    delete server;
    
     
     

@@ -94,33 +94,47 @@ void SocetServer::connect(){
 
   /*отправка и прием сообщений*/
     bool SocetServer::recerv (){
-    do{
+   // do{
        
       if(recv(m_server, m_buffer, m_bufSize, 0)==0){
         std::cout << "=> server:Lost connect" << std::endl;
         close(m_server);
         
-        return false;
+        return true;
       }
-    
+      
+      if(*m_buffer== '!'){
+          std::cout << "=> server:Client close connect" << std::endl;
+        close(m_server);
+        
+        return false;
+
+      }
+    // std::cout << m_buffer << std::endl;
       /*получаем сообщение от клиента и отправляем в чат*/
       sendMessageToChat(parseMessage(m_buffer));
     //std::this_thread::sleep_for(std::chrono::milliseconds(200));
+   /*
     strcpy(m_temp,m_buffer);
     strcpy(m_buffer, "NULL");
     if(send(m_server,m_buffer,m_bufSize, 0) == -1) recv(m_server, m_buffer, m_bufSize, 0);
     } while (*m_temp != '#'); // остановка приема
+     */
     std::cout << "=> server:Connect closed " << std::endl;
+   
+   close(m_server);
     return true;
 }
 void SocetServer::update(const Message &messageFromChat) {
   
   /*если пришло сообщение клиенту, отправляем сообщение */
+  /*
   if(messageFromChat.m_to =="client"){
     std::string s;
     s = messageFromChat.m_to + ":" + messageFromChat.m_message;
     if(send(m_server,s.c_str(),m_bufSize, 0) == -1) recv(m_server, m_buffer, m_bufSize, 0) ;
   }
+ */
 }
 
 /*преобразование из char* в Message*/

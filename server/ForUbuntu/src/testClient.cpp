@@ -50,7 +50,7 @@ bool TestClient ::recerv(){
       std::cout << "=> client:Lost connect" << std::endl;
       return false;
     }  
-  
+  close(m_client);
     return true;
    
 
@@ -60,7 +60,7 @@ void TestClient ::sendFromClient(std::string s){
 
     strcpy(m_buffer, s.c_str());
     send(m_client, m_buffer, m_bufsize, 0);
-    
+    close(m_client);
 };
 
 
