@@ -1,6 +1,9 @@
 /**
 * сервер для удаленного управления клавиатурой с телефона 
-* для работы необходимо установить xdotool
+* 
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+* для работы необходима библиотека эмулятора клавиатулы libxdo (sudo apt install libxdo3)
+* 
 * 06.01.2022 
 * Mitroshin Aleksey (miam.devsoft@yandex.ru, lapadaviloff@yandex.ru)
 */
@@ -22,18 +25,14 @@
 int Observer::m_staticNumber = 0; 
 
 int main (int argc, char * argv[]){
-if(std::system("xdotool key space") == 32512){
-  std::cout << "xdotool not install, use sudo apt install xdotool" << std::endl;
-  exit(-1);
 
-}
 //test (); //выполнение тестов
 
 std::cout <<"=> my IP : " <<  getMyIP() << std::endl; 
 
 try{
 Chat *chat = new Chat;
-KeynoardEmularor * keyboardEmulator = new KeynoardEmularor(*chat);
+KeyboardEmularor * keyboardEmulator = new KeyboardEmularor(*chat);
 bool needConnect = true;  //необходимость соединения с клиентом
 bool firstConnect = true; //первый запуск программы
 int buffer = 1024;        //размер буфера сообщения клиент-сервер

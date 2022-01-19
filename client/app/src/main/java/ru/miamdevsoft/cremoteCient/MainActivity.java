@@ -5,17 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.util.Log;
-
-import java.net.InetAddress;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button       mBtnOpen  = null;
-    private Button       mBtnSend  = null;
-    private Button       mBtnClose = null;
-    private EditText     mEdit     = null;
+    private Button       mBtnVolUp  = null;
+    private Button       mBtnVolDown  = null;
+    private Button       mBtnFullScreen = null;
+    private Button       mBtnRL  = null;
+    private Button       mBtnPlay  = null;
+    private Button       mBtnRR = null;
+    private Button       mBtnNext = null;
+    private Button       mBtnMute = null;
+   // private EditText     mEdit     = null;
     private SocetClient  mSocetClient  = null;
 
     private  String     HOST      = "192.168.1.21";
@@ -26,102 +28,85 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mBtnOpen  = (Button) findViewById(R.id.buttonOpen );
-        mBtnSend  = (Button) findViewById(R.id.buttonSend );
-        mBtnClose = (Button) findViewById(R.id.buttonClose);
-        mEdit     = (EditText) findViewById(R.id.EditText);
+
+        mBtnVolUp  = (Button) findViewById(R.id.volUP);
+        mBtnVolDown  = (Button) findViewById(R.id.volDOWN);
+        mBtnFullScreen  = (Button) findViewById(R.id.FullScreen);
+        mBtnRL  = (Button) findViewById(R.id.RL);
+        mBtnRR  = (Button) findViewById(R.id.RR);
+        mBtnPlay  = (Button) findViewById(R.id.Play);
+        mBtnNext  = (Button) findViewById(R.id.Next);
+        mBtnMute  = (Button) findViewById(R.id.Mute);
+
+
+
+
+      //  mEdit     = (EditText) findViewById(R.id.EditText);
         mSocetClient = new SocetClient(HOST, PORT);
        // mBtnSend .setEnabled(false);
        // mBtnClose.setEnabled(false);
 
-        mBtnOpen.setOnClickListener(new View.OnClickListener() {
+        mBtnVolUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onOpenClick();
+                connect("keyboardEmulator:VolUp");
             }
         });
 
-        mBtnSend.setOnClickListener(new View.OnClickListener() {
+        mBtnVolDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSendClick();
+                connect("keyboardEmulator:VolDown");
             }
         });
 
-        mBtnClose.setOnClickListener(new View.OnClickListener() {
+        mBtnFullScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onCloseClick();
+                connect("keyboardEmulator:FullScreen");
             }
+
         });
-
-    }
-    private void onOpenClick()
-    {
-        Log.i("my","AAAAAAAAAAAAAAAAAAAAAAA");
-        // Создание подключения
-       // mSocetClient = new SocetClient(HOST, PORT);
-        // Открытие сокета в отдельном потоке
-        new Thread(new Runnable() {
+        mBtnRL.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                try {
-                    mSocetClient.openConnection();
-                    // Разблокирование кнопок в UI потоке
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mBtnSend.setEnabled(true);
-                            mBtnClose.setEnabled(true);
-                        }
-                    });
-                    Log.d(SocetClient.LOG_TAG, "Соединение установлено");
-                    Log.d(SocetClient.LOG_TAG, "(mConnect != null) = " + (mSocetClient != null));
-                } catch (Exception e) {
-                    Log.e(SocetClient.LOG_TAG, e.getMessage());
-                    mSocetClient = null;
-                }
+            public void onClick(View v) {
+                connect("keyboardEmulator:RL");
             }
-        }).start();
-    }
-    private void onSendClick()
-    {
-        if (mSocetClient == null) {
-            Log.d(SocetClient.LOG_TAG, "Соединение не установлено");
-        }  else {
-            Log.d(SocetClient.LOG_TAG, "Отправка сообщения");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        mSocetClient.openConnection();
 
-                        Log.d(SocetClient.LOG_TAG, "Соединение установлено");
-                        Log.d(SocetClient.LOG_TAG, "(mConnect != null) = " + (mSocetClient != null));
-                    } catch (Exception e) {
-                        Log.e(SocetClient.LOG_TAG, e.getMessage());
-                        mSocetClient = null;
-                    }
+        });
+        mBtnRR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connect("keyboardEmulator:RR");
+            }
 
-                    try {
-                        //String text = mEdit.getText().toString();
-                        //if (text.trim().length() == 0)
-                         //   text = "Test message";
-                        /* отправляем на сервер данные */
-                        String text = "keyboardEmulator:XF86AudioMute";
-                        mSocetClient.sendData(text.getBytes());
-                    } catch (Exception e) {
-                        Log.e(SocetClient.LOG_TAG, e.getMessage());
-                    }
+        });
+        mBtnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connect("keyboardEmulator:Play");
+            }
 
+        });
+        mBtnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connect("keyboardEmulator:Next");
+            }
 
-                    mSocetClient.closeConnection();
-
-                }
-            }).start();
+        });
+         mBtnMute.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            connect("keyboardEmulator:Mute");
         }
+
+    });
+
     }
-    private void onCloseClick() {
+
+
+    private void connect(String s) {
 
         if (mSocetClient == null) {
             Log.d(SocetClient.LOG_TAG, "Соединение не установлено");
@@ -145,7 +130,8 @@ public class MainActivity extends AppCompatActivity {
                         //if (text.trim().length() == 0)
                         //   text = "Test message";
                         /* отправляем на сервер данные */
-                        String text = "!";
+                        String text = s + "\0";
+                        Log.i("myTag", s);
                         mSocetClient.sendData(text.getBytes());
                     } catch (Exception e) {
                         Log.e(SocetClient.LOG_TAG, e.getMessage());

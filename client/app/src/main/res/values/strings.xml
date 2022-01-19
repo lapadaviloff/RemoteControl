@@ -1,4 +1,12 @@
 <resources>
-    <string name="app_name">client</string>
+    <string name="app_name">RemoteControl</string>
     <string name="send">send</string>
+    <string name="next">NEXT</string>
+    <string name="vol_up">vol UP</string>
+    <string name="vol_down">VOL DOWN</string>
+    <string name="rr">RR</string>
+    <string name="play"><![CDATA[> ||]]></string>
+    <string name="rl">RL</string>
+    <string name="fullscreen">fullScreen</string>
+    <string name="mute">MUTE</string>
 </resources>

@@ -95,16 +95,16 @@ void SocetServer::connect(){
   /*отправка и прием сообщений*/
     bool SocetServer::recerv (){
    // do{
-       
+      
       if(recv(m_server, m_buffer, m_bufSize, 0)==0){
         std::cout << "=> server:Lost connect" << std::endl;
         close(m_server);
         
         return true;
       }
-      
+  
       if(*m_buffer== '!'){
-          std::cout << "=> server:Client close connect" << std::endl;
+          std::cout << m_buffer << std::endl;
         close(m_server);
         
         return false;

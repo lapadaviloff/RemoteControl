@@ -5,9 +5,9 @@
 # Compiler settings - Can be customized.
 # **/*.cpp
 CC = g++
-CXXFLAGS = -std=c++14 -Wall -Wextra -g -pthread
+CXXFLAGS =  -std=c++14 -Wall -Wextra -g -pthread 
 ADDFILE =  #src/test/test.cpp 
-LDFLAGS = 
+LDFLAGS = -lxdo
 
 # Makefile settings - Can be customized.
 APPNAME = remoteServer

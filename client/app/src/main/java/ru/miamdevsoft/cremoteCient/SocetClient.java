@@ -21,10 +21,6 @@ public class SocetClient {
 
 
 
-
-
-
-
     /**
      * Метод открытия сокета
      */
