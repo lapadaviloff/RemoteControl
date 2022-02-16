@@ -21,4 +21,4 @@ void KeyboardEmularor::update(const Message &messageFromChat) {
       else std::cout << "=> KeyboardEmularor:command not found" << std::endl;
 
     }
-} 
+}  

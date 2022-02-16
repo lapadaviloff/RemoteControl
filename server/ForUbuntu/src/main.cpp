@@ -20,6 +20,7 @@
 #include "include/testObserver.h"
 #include "include/message.h"
 #include "include/keyboardEmulator.h"
+#include "include/comServer.h"
 
 
 int Observer::m_staticNumber = 0; 
@@ -38,9 +39,14 @@ bool firstConnect = true; //первый запуск программы
 int buffer = 1024;        //размер буфера сообщения клиент-сервер
 bool isExit = true;      //флаг завершения программы
 
+    ComServer * comServer = new ComServer (*chat);
+    comServer->run();
+    
     SocetServer *server = new SocetServer (
     *chat,
     buffer); 
+    
+    
 
     std::thread t;
      
