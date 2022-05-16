@@ -5,14 +5,14 @@ using namespace std;
 
 void test (){
     cout << "**********TEST START************" <<endl;
-    int buffer = 1024; 
+    bool isExit = false;
     Message m{"client","from testObserver"};
     try{
     Chat *chat = new Chat; 
     TestObserver * observ1 = new TestObserver(*chat); 
     SocetServer *server = new SocetServer (
       *chat,
-      buffer);
+      isExit);
 
     check (getMyIP()!="null" , "getMyIP");
 

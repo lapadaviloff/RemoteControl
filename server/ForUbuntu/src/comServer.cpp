@@ -1,7 +1,10 @@
 #include "include/comServer.h"
 #include <algorithm>
 
-  ComServer::ComServer(Chat &chat):Observer(chat){
+  ComServer::ComServer(Chat &chat, bool & isExit):
+      Observer(chat),
+      m_isExit(isExit) {
+  
   }
 
 
@@ -43,7 +46,7 @@
 
     /* CSTOPB - при 1 - два стоп бита, при 0 - один */
     m_term.c_cflag &= ~CSTOPB;
-
+ 
     /*
     ICANON - канонический режим
     ECHO - эхо принятых символов
@@ -68,13 +71,13 @@
 
   memset(m_tempBuf,0x00,sizeof(m_tempBuf));
   memset(m_buf,0x00,sizeof(m_buf));
+     
       do{
           
-         
-           m_res = read(m_fd,m_buf,512);
-           if (m_res > 0) {
+           m_res = read(m_fd,m_buf,512); 
+           if (m_res > 0) {    
               for (m_countBuf = 0; m_countBuf  < m_res; m_countBuf++){
-                if(m_countTempBuf > 511) {
+                if(m_countTempBuf > 511) { 
                  printf("out of array tempBuf \n"); 
                  std::exit(-1);
                 }
@@ -82,51 +85,47 @@
                m_tempBuf[m_countTempBuf] = m_buf[m_countBuf];
                m_countTempBuf++;
               }
-              
+              printf("%02d %s %02d ", comServerIni.startByte[1], "  ", m_tempBuf[1]);
+              printf("\n");
+              if(!(/*comServerIni.startByte[0] == m_tempBuf[0] &&*/\
+                   comServerIni.startByte[1] == m_tempBuf[1]) &&\
+                   m_countTempBuf > 3){
+              clearBuff();
+
+              }
+               
             }
-            else {
+          
                 if( m_countTempBuf >= comServerIni.numBit){
-                  
-                  m_command = "";
+                   
+                  m_command = ""; 
                   printf("Read %d bytes:\n", m_countTempBuf);
                   for (m_countBuf = 0; m_countBuf < comServerIni.numBit; m_countBuf ++){
-                   printf("%02x ", m_tempBuf[m_countBuf]);
+                   printf("%02x ", m_tempBuf[m_countBuf]); 
                    
-                   
+                    
                    m_command.append(decToHex(m_tempBuf[m_countBuf]));
-                  
-                  }
-                  printf("\n");
-                  
+                   
+                  }   
+                  printf("\n");  
+                   
 
                   if (comServerIni.HexToCommannd.find(m_command)!= comServerIni.HexToCommannd.end()){
                   
                   m_messageToChat.m_message = comServerIni.HexToCommannd.at(m_command);
-                  std::cout << "send!" << std::endl;
+                
                   m_messageToChat.m_to = "keyboardEmulator";
                   sendMessageToChat(m_messageToChat);
                   };
 
-                  
-                  /*уничтожение ненужных данных*/  
-                  do{ 
-                    for (int i = 0; i < 10; i++){
-                      usleep(10000);  
-                      m_res = read(m_fd,m_buf,512);
-                     
-
-                    }
-                  
-                  }while (m_res != 0);
-                  m_countTempBuf = 0;
-                  memset(m_tempBuf,0x00,sizeof(m_tempBuf));
-                  memset(m_buf,0x00,sizeof(m_buf));
-                }
+                  clearBuff();
+                
+                
                 
               
             }
-        usleep(1500); 
-        }while (1);
+        usleep(comServerIni.m_delayServerPoll); //задержка для считывания следующей комманды
+        }while (!m_isExit);
 
  }
 std::string ComServer::decToHex (unsigned char dec){
@@ -145,4 +144,22 @@ std::string ComServer::decToHex (unsigned char dec){
     std::reverse(s.begin(), s.end());
     s.append(" ");
     return s;
+ }
+ 
+ 
+ void ComServer::clearBuff (){
+                  printf("%s","clear \n");
+                  
+                  do{ 
+                    
+                    for (int i = 0; i < 10; i++){
+                      usleep(comServerIni.m_delayServerPoll);  
+                      m_res = read(m_fd,m_buf,512);
+                    }
+                  
+                  }while (read(m_fd,m_buf,512));
+                  m_countTempBuf = 0;
+                  memset(m_tempBuf,0x00,sizeof(m_tempBuf));
+                  memset(m_buf,0x00,sizeof(m_buf));
+
  }

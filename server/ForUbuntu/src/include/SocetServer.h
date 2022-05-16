@@ -18,8 +18,10 @@ class SocetServer : public Observer {
     /*переменные из <sys/socket.h>*/
     int m_sockfd;
     int m_server;
+    bool & m_isExit;
     int m_portNum;
     int m_bufSize;
+    
     char *m_buffer; 
     char *m_temp;
     
@@ -40,7 +42,7 @@ protected:
 public:
     SocetServer(
         Chat &chat, 
-        int bufSize);
+        bool & isExit);
     ~SocetServer();
    
     /*соединение с клиентом*/
