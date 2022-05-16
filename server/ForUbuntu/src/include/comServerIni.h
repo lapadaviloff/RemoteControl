@@ -18,10 +18,10 @@
 #define  B38400	0000017
 
 struct {
-    int numBit = 34;
+    int numByte = 34;
     const char* comPort = "/dev/ttyUSB0"; //ком-порт
     unsigned int speed = B9600;
-    int m_delayServerPoll = 10000; //задержка для считывания следующей комманды
+    int m_delayServerPoll = 20; //задержка для считывания следующей комманды
                                   //из порта
     
     
@@ -36,7 +36,7 @@ struct {
         {"00 f0 f0 f0 f0 f0 f0 f0 f0 00 00 00 00 00 00 00 00 00 f0 00 00 00 f0 f0 f0 f0 00 f0 f0 f0 00 00 00 00 ", "Next"},
         {"00 f0 f0 f0 f0 f0 f0 f0 f0 00 00 00 00 00 00 00 00 f0 00 00 f0 00 f0 f0 f0 00 f0 f0 00 f0 00 00 00 00 ", "Mute"}
          };
-        /*первые два байта посылки из таблицы выше*/ 
-       unsigned const char  startByte[2] = {0x00,0xf0};
+        /*первые три байта посылки из таблицы выше*/ 
+       unsigned const char  startByte[3] = {0x00,0xf0,0xf0};
      
 } comServerIni;

@@ -4,6 +4,11 @@
 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 * для работы необходима библиотека эмулятора клавиатулы libxdo-dev (sudo apt install libxdo-dev)
 * 
+* для работы с com-портом нужно разрешить доступ к нему (sudo adduser $USER dialout, 
+* sudo usermod -a -G $USER)
+* 
+*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!                                              
+*
 * 06.01.2022 
 * Mitroshin Aleksey (miam.devsoft@yandex.ru, lapadaviloff@yandex.ru)
 */
