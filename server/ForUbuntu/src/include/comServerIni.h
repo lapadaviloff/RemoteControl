@@ -19,9 +19,13 @@
 
 struct {
     int numBit = 34;
-    const char* comPort = "/dev/ttyUSB0";
+    const char* comPort = "/dev/ttyUSB0"; //ком-порт
     unsigned int speed = B9600;
+    int m_delayServerPoll = 10000; //задержка для считывания следующей комманды
+                                  //из порта
     
+    
+    // комманды считанные с ком порта
     std:: map<std::string, std::string> HexToCommannd {
         {"00 f0 f0 f0 f0 f0 f0 f0 f0 00 00 00 00 00 00 00 00 00 f0 00 f0 f0 f0 f0 f0 f0 00 f0 00 00 00 00 00 00 ", "VolUp"},
         {"00 f0 f0 f0 f0 f0 f0 f0 f0 00 00 00 00 00 00 00 00 f0 00 f0 f0 f0 f0 f0 f0 00 f0 00 00 00 00 00 00 00 ", "VolDown"},
@@ -32,6 +36,7 @@ struct {
         {"00 f0 f0 f0 f0 f0 f0 f0 f0 00 00 00 00 00 00 00 00 00 f0 00 00 00 f0 f0 f0 f0 00 f0 f0 f0 00 00 00 00 ", "Next"},
         {"00 f0 f0 f0 f0 f0 f0 f0 f0 00 00 00 00 00 00 00 00 f0 00 00 f0 00 f0 f0 f0 00 f0 f0 00 f0 00 00 00 00 ", "Mute"}
          };
-      
+        /*первые два байта посылки из таблицы выше*/ 
+       unsigned const char  startByte[2] = {0x00,0xf0};
      
 } comServerIni;

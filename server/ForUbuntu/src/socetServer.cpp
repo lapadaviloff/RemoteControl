@@ -3,10 +3,11 @@
 
 SocetServer::SocetServer(
   Chat &chat, 
-  int bufSize):
+  bool & isExit):
   Observer(chat), 
+  m_isExit(isExit),
   m_portNum (1500),
-  m_bufSize(bufSize){ 
+  m_bufSize(1024){ 
     try{
     m_temp = new char[m_bufSize];
     m_buffer = new char[m_bufSize];

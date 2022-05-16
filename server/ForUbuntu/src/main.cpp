@@ -2,7 +2,7 @@
 * сервер для удаленного управления клавиатурой с телефона 
 * 
 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-* для работы необходима библиотека эмулятора клавиатулы libxdo (sudo apt install libxdo3)
+* для работы необходима библиотека эмулятора клавиатулы libxdo-dev (sudo apt install libxdo-dev)
 * 
 * 06.01.2022 
 * Mitroshin Aleksey (miam.devsoft@yandex.ru, lapadaviloff@yandex.ru)
@@ -34,17 +34,17 @@ std::cout <<"=> my IP : " <<  getMyIP() << std::endl;
 try{
 Chat *chat = new Chat;
 KeyboardEmularor * keyboardEmulator = new KeyboardEmularor(*chat);
+
 bool needConnect = true;  //необходимость соединения с клиентом
 bool firstConnect = true; //первый запуск программы
-int buffer = 1024;        //размер буфера сообщения клиент-сервер
-bool isExit = true;      //флаг завершения программы
+bool isExit = false;      //флаг завершения программы
 
-    ComServer * comServer = new ComServer (*chat);
+    ComServer * comServer = new ComServer (*chat, isExit);
     comServer->run();
     
     SocetServer *server = new SocetServer (
     *chat,
-    buffer); 
+    isExit); 
     
     
 
@@ -73,7 +73,7 @@ bool isExit = true;      //флаг завершения программы
    
     /*получение сообщений от других источников для клиента*/    
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    } while(isExit); 
+    } while(!isExit); 
 
 t.join();
 delete server;
